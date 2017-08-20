@@ -14,8 +14,10 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-namespace League\OAuth2\Client\Provider\Exception;
+namespace Fathershawn\OAuth2\Client\Provider;
 
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use Psr\Http\Message\ResponseInterface;
 
 class FormAssemblyIdentityProviderException extends IdentityProviderException
 {
@@ -24,7 +26,7 @@ class FormAssemblyIdentityProviderException extends IdentityProviderException
      * Creates client exception from response.
      *
      * @param  ResponseInterface $response
-     * @param  string $data Parsed response data
+     * @param  array|string $data Parsed response data
      *
      * @return IdentityProviderException
      */
@@ -40,7 +42,7 @@ class FormAssemblyIdentityProviderException extends IdentityProviderException
      * Creates oauth exception from response.
      *
      * @param  ResponseInterface $response
-     * @param  string $data Parsed response data
+     * @param  array|string $data Parsed response data
      *
      * @return IdentityProviderException
      */

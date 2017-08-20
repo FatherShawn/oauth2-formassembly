@@ -1,7 +1,7 @@
 {
   "name": "fathershawn/oauth2-formassembly",
   "description": "FormAssembly OAuth 2.0 Client Provider for The PHP League OAuth2-Client",
-  "license": "MIT",
+  "license": "GPL2",
   "authors": [
     {
       "name": "Shawn P. Duncan",
@@ -28,7 +28,7 @@
   },
   "autoload": {
     "psr-4": {
-      "League\\OAuth2\\Client\\": "src/"
+      "Fathershawn\\OAuth2\\Client\\": "src/"
     }
   }
 }

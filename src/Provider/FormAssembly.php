@@ -14,14 +14,29 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-namespace League\OAuth2\Client\Provider;
+namespace Fathershawn\OAuth2\Client\Provider;
 
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Token\AccessToken;
 use Psr\Http\Message\ResponseInterface;
 
 class FormAssembly extends AbstractProvider
 {
+    /**
+     * The path on the formassebly side to request authorization.
+     */
+    const AUTH_PATH = '/oauth/login';
+
+    /**
+     * The path on the formassembly side to initiate authorization tokens.
+     */
+    const  TOKEN_PATH = '/oauth/access_token';
+
+    /**
+     * @var string
+     *   The url to the instance of FormAssembly
+     */
+    protected $baseUrl;
 
     /**
      * Constructs an OAuth 2.0 service provider.
@@ -41,16 +56,17 @@ class FormAssembly extends AbstractProvider
     public function __construct(array $options = [], array $collaborators = [])
     {
         $requiredOptions = [
-          'clientId',
-          'clientSecret',
-          'redirectUri',
-          'baseUrl',
+            'clientId',
+            'clientSecret',
+            'redirectUri',
+            'baseUrl',
         ];
-        foreach $requiredOptions as $option{
-              !array_key_exists($option, $options)
+        foreach ($requiredOptions as $option) {
+            if (!array_key_exists($option, $options)) {
+                throw new \InvalidArgumentException("Missing required option: $option");
+            }
         }
-        {parent::__construct($options, $collaborators);
-    }
+        parent::__construct($options, $collaborators);
     }
 
 
@@ -59,23 +75,40 @@ class FormAssembly extends AbstractProvider
      */
     public function getBaseAuthorizationUrl()
     {
-        // TODO: Implement getBaseAuthorizationUrl() method.
+        return $this->baseUrl . self::AUTH_PATH;
     }
+
+    /**
+     * Returns authorization parameters based on provided options.
+     *
+     * @param  array $options
+     * @return array Authorization parameters
+     */
+    protected function getAuthorizationParameters(array $options)
+    {
+        if (!isset($options['type']) || empty($options['type'])) {
+            $options['type'] = 'web';
+        }
+        return parent::getAuthorizationParameters($options);
+    }
+
 
     /**
      * @inheritDoc
      */
     public function getBaseAccessTokenUrl(array $params)
     {
-        // TODO: Implement getBaseAccessTokenUrl() method.
+        return $this->baseUrl . self::TOKEN_PATH;
     }
+
 
     /**
      * @inheritDoc
      */
     public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
-        // TODO: Implement getResourceOwnerDetailsUrl() method.
+        //  The FormAssembly access_token response does not contain a resource owner.
+        return '';
     }
 
     /**
@@ -83,7 +116,7 @@ class FormAssembly extends AbstractProvider
      */
     protected function getDefaultScopes()
     {
-        // TODO: Implement getDefaultScopes() method.
+        return [];
     }
 
     /**
@@ -91,7 +124,9 @@ class FormAssembly extends AbstractProvider
      */
     protected function checkResponse(ResponseInterface $response, $data)
     {
-        // TODO: Implement checkResponse() method.
+        if ($response->getStatusCode() >= 400) {
+            throw FormAssemblyIdentityProviderException::clientException($response, $data);
+        }
     }
 
     /**
@@ -99,7 +134,7 @@ class FormAssembly extends AbstractProvider
      */
     protected function createResourceOwner(array $response, AccessToken $token)
     {
-        // TODO: Implement createResourceOwner() method.
+        return new ResourceOwnerUnsupported();
     }
 
 }
