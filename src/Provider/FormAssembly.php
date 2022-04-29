@@ -19,11 +19,12 @@ namespace Fathershawn\OAuth2\Client\Provider;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Token\AccessToken;
 use Psr\Http\Message\ResponseInterface;
+use Fathershawn\OAuth2\Client\Provider\Exception\FormAssemblyIdentityProviderException;
 
 class FormAssembly extends AbstractProvider
 {
     /**
-     * The path on the formassebly side to request authorization.
+     * The path on the FormAssembly side to request authorization.
      */
     const AUTH_PATH = '/oauth/login';
 
@@ -86,7 +87,7 @@ class FormAssembly extends AbstractProvider
      */
     protected function getAuthorizationParameters(array $options)
     {
-        if (!isset($options['type']) || empty($options['type'])) {
+        if (empty($options['type'])) {
             $options['type'] = 'web';
         }
         return parent::getAuthorizationParameters($options);

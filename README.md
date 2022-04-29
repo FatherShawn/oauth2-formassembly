@@ -31,6 +31,7 @@ $url = $provider->getAuthorizationUrl();
 ```
 
 When the user is redirected to the url to capture the code:
+
 ```php
 <?php
 

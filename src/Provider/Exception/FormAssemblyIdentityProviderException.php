@@ -14,7 +14,7 @@
  * http://www.gnu.org/licenses/gpl.html
  */
 
-namespace Fathershawn\OAuth2\Client\Provider;
+namespace Fathershawn\OAuth2\Client\Provider\Exception;
 
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Psr\Http\Message\ResponseInterface;
@@ -34,7 +34,7 @@ class FormAssemblyIdentityProviderException extends IdentityProviderException
     {
         return static::fromResponse(
           $response,
-          isset($data['message']) ? $data['message'] : $response->getReasonPhrase()
+            $data['message'] ?? $response->getReasonPhrase()
         );
     }
 
@@ -50,7 +50,7 @@ class FormAssemblyIdentityProviderException extends IdentityProviderException
     {
         return static::fromResponse(
           $response,
-          isset($data['error']) ? $data['error'] : $response->getReasonPhrase()
+            $data['error'] ?? $response->getReasonPhrase()
         );
     }
 
