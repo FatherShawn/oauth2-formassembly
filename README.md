@@ -1,6 +1,6 @@
 # oauth2-formassembly
 
-This package provides FormAssembly OAuth 2.0 support for the PHP League's [OAuth 2.0 Client](https://github.com/thephpleague/oauth2-client).
+This package provides [FormAssembly](https://github.com/veerwest/formassembly-api) OAuth 2.0 support for the PHP League's [OAuth 2.0 Client](https://github.com/thephpleague/oauth2-client).
 
 ## Installation
 
