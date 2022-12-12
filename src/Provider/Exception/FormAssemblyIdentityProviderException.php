@@ -1,11 +1,12 @@
 <?php
+
 /**
  * @author Shawn P. Duncan <code@sd.shawnduncan.org>
- * @date   7/29/17,  7:59 AM
+ * @date   12/12/2022
  *
  * @brief
  *
- * Copyright 2017 by Shawn P. Duncan.  This code is
+ * Copyright 2017-2022 by Shawn P. Duncan.  This code is
  * released under the GNU General Public License.
  * Which means that it is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,21 +20,20 @@ namespace Fathershawn\OAuth2\Client\Provider\Exception;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use Psr\Http\Message\ResponseInterface;
 
-class FormAssemblyIdentityProviderException extends IdentityProviderException
+final class FormAssemblyIdentityProviderException extends IdentityProviderException
 {
-
     /**
      * Creates client exception from response.
      *
-     * @param  ResponseInterface $response
-     * @param  array|string $data Parsed response data
+     * @param ResponseInterface $response
+     * @param string[]|string   $data     Parsed response data
      *
      * @return IdentityProviderException
      */
     public static function clientException(ResponseInterface $response, $data)
     {
-        return static::fromResponse(
-          $response,
+        return self::fromResponse(
+            $response,
             $data['message'] ?? $response->getReasonPhrase()
         );
     }
@@ -41,15 +41,15 @@ class FormAssemblyIdentityProviderException extends IdentityProviderException
     /**
      * Creates oauth exception from response.
      *
-     * @param  ResponseInterface $response
-     * @param  array|string $data Parsed response data
+     * @param ResponseInterface $response
+     * @param string[]|string   $data     Parsed response data
      *
      * @return IdentityProviderException
      */
     public static function oauthException(ResponseInterface $response, $data)
     {
-        return static::fromResponse(
-          $response,
+        return self::fromResponse(
+            $response,
             $data['error'] ?? $response->getReasonPhrase()
         );
     }
@@ -57,16 +57,19 @@ class FormAssemblyIdentityProviderException extends IdentityProviderException
     /**
      * Creates identity exception from response.
      *
-     * @param  ResponseInterface $response
-     * @param  string $message
+     * @param ResponseInterface $response
+     * @param string            $message
      *
      * @return IdentityProviderException
      */
     protected static function fromResponse(
-      ResponseInterface $response,
-      $message = null
+        ResponseInterface $response,
+        $message = ''
     ) {
-        return new static($message, $response->getStatusCode(),
-          (string)$response->getBody());
+        return new self(
+            $message,
+            $response->getStatusCode(),
+            (string)$response->getBody()
+        );
     }
 }

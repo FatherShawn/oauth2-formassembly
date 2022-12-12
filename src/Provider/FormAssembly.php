@@ -1,11 +1,12 @@
 <?php
+
 /**
  * @author Shawn P. Duncan <code@sd.shawnduncan.org>
- * @date   7/29/17,  7:55 AM
+ * @date   12/12/2022
  *
  * @brief
  *
- * Copyright 2017 by Shawn P. Duncan.  This code is
+ * Copyright 2017-2022 by Shawn P. Duncan.  This code is
  * released under the GNU General Public License.
  * Which means that it is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +18,8 @@
 namespace Fathershawn\OAuth2\Client\Provider;
 
 use League\OAuth2\Client\Provider\AbstractProvider;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use Psr\Http\Message\ResponseInterface;
 use Fathershawn\OAuth2\Client\Provider\Exception\FormAssemblyIdentityProviderException;
@@ -26,12 +29,12 @@ class FormAssembly extends AbstractProvider
     /**
      * The path on the FormAssembly side to request authorization.
      */
-    const AUTH_PATH = '/oauth/login';
+    public const AUTH_PATH = '/oauth/login';
 
     /**
      * The path on the formassembly side to initiate authorization tokens.
      */
-    const  TOKEN_PATH = '/oauth/access_token';
+    public const  TOKEN_PATH = '/oauth/access_token';
 
     /**
      * @var string
@@ -42,17 +45,18 @@ class FormAssembly extends AbstractProvider
     /**
      * Constructs an OAuth 2.0 service provider.
      *
-     * @param array $options
+     * @param array<string, string> $options
      *    An array of options to set on this provider.
      *
      *    Options include `clientId`, `clientSecret`, `redirectUri`, and
      *   `state`, `baseUrl`. Options `clientId`, `clientSecret`, `redirectUri`,
      *    and `baseUrl` are required.
-     * @param array $collaborators An array of collaborators that may be used
-     *   to
-     *     override this provider's default behavior. Collaborators include
-     *     `grantFactory`, `requestFactory`, and `httpClient`.
-     *     Individual providers may introduce more collaborators, as needed.
+     * @param object[]              $collaborators An array of collaborators that may be used
+     *                                             to override this provider's default
+     *                                             behavior. Collaborators include
+     *                                             `grantFactory`, `requestFactory`, and
+     *                                             `httpClient`. Individual providers may
+     *                                             introduce more collaborators, as needed.
      */
     public function __construct(array $options = [], array $collaborators = [])
     {
@@ -82,8 +86,9 @@ class FormAssembly extends AbstractProvider
     /**
      * Returns authorization parameters based on provided options.
      *
-     * @param  array $options
-     * @return array Authorization parameters
+     * @param  array<string, string> $options
+     * @return array<string, string>
+     *   Authorization parameters
      */
     protected function getAuthorizationParameters(array $options)
     {
@@ -95,7 +100,15 @@ class FormAssembly extends AbstractProvider
 
 
     /**
-     * @inheritDoc
+     * Returns the base URL for requesting an access token.
+     *
+     * Eg. https://oauth.service.com/token
+     *
+     * @param string[] $params
+     *   Unused in this implementation.
+     *
+     * @return string
+     *   The URL.
      */
     public function getBaseAccessTokenUrl(array $params)
     {
@@ -113,7 +126,9 @@ class FormAssembly extends AbstractProvider
     }
 
     /**
-     * @inheritDoc
+     * Returns the default scopes used by this provider.
+     *
+     * @return null[]
      */
     protected function getDefaultScopes()
     {
@@ -121,7 +136,11 @@ class FormAssembly extends AbstractProvider
     }
 
     /**
-     * @inheritDoc
+     * Checks a provider response for errors.
+     *
+     * @throws IdentityProviderException
+     * @param  ResponseInterface $response
+     * @param  string[]|string   $data     Parsed response data
      */
     protected function checkResponse(ResponseInterface $response, $data)
     {
@@ -131,11 +150,14 @@ class FormAssembly extends AbstractProvider
     }
 
     /**
-     * @inheritDoc
+     * This method is required by the interface but not supported by FormAssembly.
+     *
+     * @param  mixed[]     $response
+     * @param  AccessToken $token
+     * @return ResourceOwnerInterface
      */
     protected function createResourceOwner(array $response, AccessToken $token)
     {
         return new ResourceOwnerUnsupported();
     }
-
 }
